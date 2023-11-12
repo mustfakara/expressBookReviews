@@ -85,9 +85,31 @@ public_users.get('/author/:author', function (req, res) {
 });
 
 // Get all books based on title
+
+// This is Task 4 *****
 public_users.get('/title/:title', function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const title = req.params.title;
+  let getBookDetailsTitle = new Promise((resolve, reject) => {
+    if (title) {
+      resolve(title)
+    } else {
+      reject(`Error book title!`)
+    }
+  })
+
+  getBookDetailsTitle.then(
+    (title) => {
+      let existedBooks = Object.entries(books).filter(([isbn, details]) => details.title === title)
+      if (existedBooks.length > 0) {
+        existedBooks = Object.fromEntries(existedBooks);
+        return res.json(existedBooks);
+      }
+      return res.status(404).json({message: `Book with title ${title} not found!`});
+    },
+    (msg) => {
+      res.status(404).json({message: msg})
+    }
+  )
 });
 
 //  Get book review
