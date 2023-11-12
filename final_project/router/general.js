@@ -4,10 +4,22 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
+// Register the username and the password
+
+// This is Task 6 *****
 
 public_users.post("/register", (req, res) => {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const username = req.body.username
+  const password = req.body.password
+
+  if (username && password) {
+    if (!isValid(username)) {
+      users.push({"username": username, "password": password});
+      return res.json({message: `User ${username} has been successfully registered. Now you can log in!`});
+    }
+    return res.status(400).json({message: `User ${username} already exists!`});
+  }
+  return res.status(400).json({message: "Unable to register user!"});
 });
 
 // Get the book list available in the shop
@@ -35,6 +47,7 @@ public_users.get('/', function (req, res) {
 // Get book details based on ISBN
 
 // This is Task 2 *****
+
 public_users.get('/isbn/:isbn', function (req, res) {
   const isbn_number = req.params.isbn;
   
@@ -59,6 +72,7 @@ public_users.get('/isbn/:isbn', function (req, res) {
 // Get book details based on author
 
 // This is Task 3 *****
+
 public_users.get('/author/:author', function (req, res) {
   const author = req.params.author;
   let getBookDetailsAuthor = new Promise((resolve, reject) => {
@@ -87,6 +101,7 @@ public_users.get('/author/:author', function (req, res) {
 // Get all books based on title
 
 // This is Task 4 *****
+
 public_users.get('/title/:title', function (req, res) {
   const title = req.params.title;
   let getBookDetailsTitle = new Promise((resolve, reject) => {
@@ -113,14 +128,9 @@ public_users.get('/title/:title', function (req, res) {
 });
 
 //  Get book review
-
-// This is Task 5 ****
 public_users.get('/review/:isbn', function (req, res) {
-  const isbn = req.params.isbn;
-  if (books[isbn]) {
-    return res.json(books[isbn].reviews)
-  }
-  return res.status(404).json({message: `Book with ISBN ${isbn} not found!`});
+  //Write your code here
+  return res.status(300).json({ message: "Yet to be implemented" });
 });
 
 module.exports.general = public_users;
