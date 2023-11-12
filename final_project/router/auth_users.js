@@ -67,6 +67,23 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   return res.status(404).json({message: `Book with ISBN ${isbn} not found!`});
 });
 
+// Use DELETE Method to delete only review that username session logged in.
+
+// This is Task 9 *****
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  const isbn = req.params.isbn;
+  if (books[isbn]) {
+    const reviewer = req.session.authorization['username'];
+    let bookReviews = books[isbn].reviews; 
+    delete bookReviews[reviewer];
+    return res.json({message: `Review has been deleted successfully!`, 
+                     currentUser: reviewer, 
+                     bookDetails: {"isbn": isbn, ...books[isbn]}});
+  }
+  return res.status(404).json({message: `Book with ISBN ${isbn} not found!`}); 
+});
+
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
