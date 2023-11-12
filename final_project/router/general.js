@@ -57,9 +57,31 @@ public_users.get('/isbn/:isbn', function (req, res) {
 });
 
 // Get book details based on author
+
+// This is Task 3 *****
 public_users.get('/author/:author', function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const author = req.params.author;
+  let getBookDetailsAuthor = new Promise((resolve, reject) => {
+    if (author) {
+      resolve(author)
+    } else {
+      reject(`Error author!`)
+    }
+  })
+
+  getBookDetailsAuthor.then(
+    (author) => {
+      let existedBooks = Object.entries(books).filter(([isbn, details]) => details.author === author)
+      if (existedBooks.length > 0) {
+        existedBooks = Object.fromEntries(existedBooks);
+        return res.json(existedBooks);
+      }
+      return res.status(404).json({message: `Book with author ${author} not found!`});
+    },
+    (msg) => {
+      res.status(404).json({message: msg})
+    }
+  )
 });
 
 // Get all books based on title
